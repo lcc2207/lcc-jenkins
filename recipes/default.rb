@@ -1,4 +1,4 @@
-include_recipe 'chef_sugar'
+include_recipe 'chef-sugar'
 include_recipe 'apt::default' if ubuntu?
 
 # install java for jenkins install
