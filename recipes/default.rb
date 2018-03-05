@@ -16,4 +16,4 @@ end
 # include_recipe 'ntp::default'
 
 # install jenkins
-# include_recipe 'jenkins::master'
+include_recipe 'jenkins::master'

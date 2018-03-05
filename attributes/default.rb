@@ -4,3 +4,7 @@ default['scalr-jenkins']['check_file'] = Chef::Config[:file_cache_path] + '/jenk
 # java version
 default['java']['jdk_version'] = '8'
 default['java']['oracle']['accept_oracle_download_terms'] = true
+
+# auth
+default['scalr-jenkins']['jenkins']['adminuser'] = 'chef'
+default['scalr-jenkins']['jenkins']['data_bag'] = 'scalr-jenkins'
