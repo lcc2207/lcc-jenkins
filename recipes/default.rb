@@ -15,7 +15,7 @@ end
 # include_recipe 'ntp::default'
 
 # install required external tools
-node['scalr-jenkins']['tools'] .each do | pkg|
+node['scalr-jenkins']['tools'].each do | pkg|
   package pkg do
     action :install
   end
