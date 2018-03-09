@@ -30,6 +30,15 @@ jenkins_script 'Add executors' do
   EOH
 end
 
+# install plugings
+node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
+  jenkins_plugin plugin do
+    action :install
+    install_deps true
+    notifies :restart, 'service[jenkins]', :delayed
+  end
+end
+
 # force authentication
 jenkins_script 'add_authentication' do
   command <<-EOH.gsub(/^ {4}/, '')
