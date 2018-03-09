@@ -1,4 +1,3 @@
-include_recipe 'chef-sugar'
 include_recipe 'apt::default' if ubuntu?
 
 # install java for jenkins install
@@ -14,6 +13,13 @@ end
 
 # setup NTP
 # include_recipe 'ntp::default'
+
+# install required external tools
+node['scalr-jenkins']['tools'] .each do | pkg|
+  package pkg do
+    action :install
+  end
+end
 
 # install jenkins
 include_recipe 'jenkins::master'
