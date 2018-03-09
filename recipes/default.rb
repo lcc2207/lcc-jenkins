@@ -17,3 +17,4 @@ end
 
 # install jenkins
 include_recipe 'jenkins::master'
+include_recipe 'scalr-jenkins::_jenkinsconfig'

@@ -9,4 +9,5 @@ default['java']['oracle']['accept_oracle_download_terms'] = true
 default['scalr-jenkins']['jenkins']['adminuser'] = 'chef'
 default['scalr-jenkins']['jenkins']['data_bag'] = 'scalr-jenkins'
 
+# plugins
 default['scalr-jenkins']['jenkins']['plugins'] = ['github']
