@@ -15,9 +15,10 @@ end
 # include_recipe 'ntp::default'
 
 # install required external tools
-node['scalr-jenkins']['tools'].each do | pkg|
-  package pkg do
-    action :install
+node['scalr-jenkins']['tools'].each do |pkg|
+  execute 'isntall pip_pkg' do
+    cwd Chef::Config[:file_cache_path]
+    command "pip install #{pkg}"
   end
 end
 
