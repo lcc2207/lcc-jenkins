@@ -13,4 +13,4 @@ default['scalr-jenkins']['jenkins']['data_bag'] = 'scalr-jenkins'
 default['scalr-jenkins']['jenkins']['plugins'] = ['github']
 
 # tools
-default['scalr-jenkins']['tools'] = %w('yamllint' 'jenkins-job-builder') #may need to add pip
+default['scalr-jenkins']['tools'] = %w(yamllint jenkins-job-builder) # may need to add pip
