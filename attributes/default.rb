@@ -11,3 +11,6 @@ default['scalr-jenkins']['jenkins']['data_bag'] = 'scalr-jenkins'
 
 # plugins
 default['scalr-jenkins']['jenkins']['plugins'] = ['github']
+
+# tools
+default['scalr-jenkins']['tools'] = ['pip' 'yamllint' 'jenkins-job-builder']
