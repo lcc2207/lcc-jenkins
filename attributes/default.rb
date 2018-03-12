@@ -10,7 +10,7 @@ default['scalr-jenkins']['jenkins']['adminuser'] = 'chef'
 default['scalr-jenkins']['jenkins']['data_bag'] = 'scalr-jenkins'
 
 # plugins
-default['scalr-jenkins']['jenkins']['plugins'] = ['github']
+default['scalr-jenkins']['jenkins']['plugins'] = ['github', 'scalr-ctl']
 
 # tools
 default['scalr-jenkins']['tools'] = %w(yamllint jenkins-job-builder) # may need to add pip
