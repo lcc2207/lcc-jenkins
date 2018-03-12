@@ -4,7 +4,7 @@ maintainer_email 'lynn@scalr.com'
 license 'All Rights Reserved'
 description 'Installs/Configures scalr-jenkins'
 long_description 'Installs/Configures scalr-jenkins'
-version '0.1.7'
+version '0.1.8'
 chef_version '>= 12.1' if respond_to?(:chef_version)
 
 issues_url 'https://github.com/lcc2207/scalr-jenkins/issues'
