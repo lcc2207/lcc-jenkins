@@ -12,11 +12,14 @@ file node['scalr-jenkins']['check_file'] do
 end
 
 # setup NTP
-# include_recipe 'ntp::default'
+include_recipe 'ntp::default'
+
+# instal pip
+package 'python-pip'
 
 # install required external tools
 node['scalr-jenkins']['tools'].each do |pkg|
-  execute 'isntall pip_pkg' do
+  execute 'install pip_pkg' do
     cwd Chef::Config[:file_cache_path]
     command "pip install #{pkg}"
   end

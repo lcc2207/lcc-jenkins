@@ -1,15 +1,15 @@
 puts node['scalr-jenkins']['check_file']
 if File.exist?(node['scalr-jenkins']['check_file'])
   node.run_state[:jenkins_username] = node['scalr-jenkins']['jenkins']['adminuser']
-  node.run_state[:jenkins_password] = data_bag_item(node['scalr-jenkins']['jenkins']['data_bag'], node['scalr-jenkins']['jenkins']['adminuser'])['password']
+  node.run_state[:jenkins_password] = data_bag_item(node['scalr-jenkins']['users']['data_bag'], node['scalr-jenkins']['jenkins']['adminuser'])['password']
 end
 
 # pull users databag
-users = data_bag(node['scalr-jenkins']['jenkins']['data_bag'])
+users = data_bag(node['scalr-jenkins']['users']['data_bag'])
 
 # create the base users
 users.each do |user|
-  dbuser = data_bag_item(node['scalr-jenkins']['jenkins']['data_bag'], user)
+  dbuser = data_bag_item(node['scalr-jenkins']['users']['data_bag'], user)
   jenkins_user dbuser['id'] do
     retries 2
     retry_delay 60
