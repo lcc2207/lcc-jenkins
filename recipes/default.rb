@@ -25,3 +25,4 @@ end
 # install jenkins
 include_recipe 'jenkins::master'
 include_recipe 'scalr-jenkins::_jenkinsconfig'
+include_recipe 'scalr-jenkins::jenkins_jobs'
