@@ -1,6 +1,9 @@
 # verify security
 default['scalr-jenkins']['check_file'] = Chef::Config[:file_cache_path] + '/jenkins.sec'
 
+# run on time for scalr-ctl
+default['scalr-jenkins']['scalr-ctl_file'] = Chef::Config[:file_cache_path] + '/scarl-ctl'
+
 # java version
 default['java']['jdk_version'] = '8'
 default['java']['oracle']['accept_oracle_download_terms'] = true
@@ -15,17 +18,11 @@ default['scalr-jenkins']['jenkins']['plugins'] = ['github']
 # tools
 default['scalr-jenkins']['tools'] = %w(yamllint jenkins-job-builder scalr-ctl)
 
-# # jenkins config base
-default['scalr-jenkins']['jenkins-confg']['path'] = '/etc/scarl-cicd'
-#
 # # jenkins job builder path
-default['scalr-jenkins']['jenkins-job-builder']['path'] = '/etc/jenkins_jobs'
-
-# requied folders
-default['scalr-jenkins']['folders'] = [default['scalr-jenkins']['jenkins-confg']['path'], default['scalr-jenkins']['jenkins-job-builder']['path']]
-
-# jenkins Config
-default['scalr-jenkins']['jenkins-config']['data_bag'] = 'scalr-jenkins-config'
+default['scalr-jenkins']['jenkins-jobs']['path'] = '/etc/jenkins_jobs'
 
 # jenkins jobs
 default['scalr-jenkins']['jenkins-jobs']['data_bag'] = 'scalr-jenkins-jobs'
+
+# requied packages
+default['scalr-jenkins']['packages'] = ['python-pip', 'jq']

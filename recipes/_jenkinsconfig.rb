@@ -30,13 +30,24 @@ jenkins_script 'Add executors' do
   EOH
 end
 
-# install plugings
+# get jenkins plugin updates
+execute 'get-update-json' do
+  command "curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- #{node['jenkins']['master']['endpoint']}/updateCenter/byId/default/postBack"
+  action :run
+end
+
+# install jenkins plugings
 node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
-  jenkins_plugin plugin do
-    action :install
-    install_deps true
+  jenkins_command "install-plugin #{plugin}" do
+    action :execute
     notifies :restart, 'service[jenkins]', :delayed
   end
+  # needs fixed in the base cookbook
+  # jenkins_plugin plugin do
+  #   action :install
+  #   install_deps true
+  #   notifies :restart, 'service[jenkins]', :delayed
+  # end
 end
 
 # force authentication

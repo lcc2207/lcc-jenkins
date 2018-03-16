@@ -22,25 +22,23 @@
       artifactNumToKeep: -1
     builders:
       - shell: |
-          export key_id=APIKLMM2GHBHUEFFESFQ
-          export secret_key=wkffJ8uDx+MgQtPKWd8ZPNeC7r5lo11UuXq9NwzQ
-          export config=/opt/scalr-cicd/demo.yml
+          export config=<%= @confpath %>
           export FName=$JOB_NAME-$GIT_BRANCH-$GIT_COMMIT
           export farmid=<%= @farmid %>
 
           # Create farm and get ID
-          export farmid=`scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms clone --name $FName --farmId $farmid | jq '.data.id'`
+          export farmid=`scalr-ctl --config $config farms clone --name $FName --farmId $farmid | jq '.data.id'`
           echo $farmid
 
           # launch farm
-          scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms launch --farmId $farmid
+          scalr-ctl --config $config farms launch --farmId $farmid
 
           #give scalr time to kick off
           sleep 60
 
           # get server id
-          scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms list-servers --farmId $farmid
-          export serverid=`scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms list-servers --farmId $farmid | jq '.data[0].id'|tr -d '"'`
+          scalr-ctl --config $config farms list-servers --farmId $farmid
+          export serverid=`scalr-ctl --config $config farms list-servers --farmId $farmid | jq '.data[0].id'|tr -d '"'`
           export orchserverid='"'$serverid'"'
 
           echo $serverid
@@ -49,7 +47,7 @@
           # loop till the server is up and running
           while [ "$serverstatus" != "running" ]
            do echo "Status: $serverstatus"
-          	export serverstatus=`scalr-ctl --key_id $key_id --secret_key $secret_key --config $config servers get --serverId $serverid | jq '.data.status'| tr -d '"'`
+          	export serverstatus=`scalr-ctl --config $config servers get --serverId $serverid | jq '.data.status'| tr -d '"'`
           	sleep 10
           done
 
@@ -57,26 +55,26 @@
           #sleep 30
 
           # get orchestration log id
-          export orchlogid=`scalr-ctl --key_id $key_id --secret_key $secret_key --config $config scripts list-orchestration-logs | jq ".data[] | select(.server.id | contains($orchserverid)).id"| sed "s/\"//g"`
+          export orchlogid=`scalr-ctl --config $config scripts list-orchestration-logs | jq ".data[] | select(.server.id | contains($orchserverid)).id"| sed "s/\"//g"`
 
           # get orchestration logs
-          scalr-ctl --key_id $key_id --secret_key $secret_key --config $config scripts get-orchestration-log --logEntryId $orchlogid | jq '.'
+          scalr-ctl --config $config scripts get-orchestration-log --logEntryId $orchlogid | jq '.'
 
           # verify exit code
-          if [ `scalr-ctl --key_id $key_id --secret_key $secret_key --config $config scripts get-orchestration-log --logEntryId $orchlogid | jq '.data.executionExitCode'` != 0 ]
+          if [ `scalr-ctl --config $config scripts get-orchestration-log --logEntryId $orchlogid | jq '.data.executionExitCode'` != 0 ]
            then
            exit 1
           fi
 
           # clean up
-          scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms terminate --farmId $farmid
+          scalr-ctl --config $config farms terminate --farmId $farmid
 
           # loop till the server has been terminated
           while [ "$serverstatus" != "terminated" ]
            do echo "Status: $serverstatus"
-          	export serverstatus=`scalr-ctl --key_id $key_id --secret_key $secret_key --config $config servers get --serverId $serverid | jq '.data.status'| tr -d '"'`
+          	export serverstatus=`scalr-ctl --config $config servers get --serverId $serverid | jq '.data.status'| tr -d '"'`
           	sleep 10
           done
 
           # delete farm
-          scalr-ctl --key_id $key_id --secret_key $secret_key --config $config farms delete --farmId $farmid
+          scalr-ctl --config $config farms delete --farmId $farmid
