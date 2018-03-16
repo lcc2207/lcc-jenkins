@@ -15,7 +15,9 @@ end
 include_recipe 'ntp::default'
 
 # instal pip
-package 'python-pip'
+node['scalr-jenkins']['packages'].each do |ospkg|
+  package ospkg
+end
 
 # install required external tools
 node['scalr-jenkins']['tools'].each do |pkg|
@@ -28,4 +30,4 @@ end
 # install jenkins
 include_recipe 'jenkins::master'
 include_recipe 'scalr-jenkins::_jenkinsconfig'
-include_recipe 'scalr-jenkins::jenkins_jobs'
+include_recipe 'scalr-jenkins::_jenkins_jobs'

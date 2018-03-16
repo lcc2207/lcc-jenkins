@@ -1,5 +1,10 @@
 {
   "id":"dev-app-2",
   "gitrepo":"https://github.com/lcc2207/test1.git",
-  "farmid": "2627"
+  "farmid": "2627",
+  "scalr_server":"demo.scalr.com",
+  "accountId": "11",
+  "envId": "53",
+  "key_id": "APIKLMM2GHBHUEFFESFQ",
+  "secret_key": "wkffJ8uDx+MgQtPKWd8ZPNeC7r5lo11UuXq9NwzQ"
 }
