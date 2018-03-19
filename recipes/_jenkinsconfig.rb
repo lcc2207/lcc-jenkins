@@ -1,4 +1,3 @@
-puts node['scalr-jenkins']['check_file']
 if File.exist?(node['scalr-jenkins']['check_file'])
   node.run_state[:jenkins_username] = node['scalr-jenkins']['jenkins']['adminuser']
   node.run_state[:jenkins_password] = data_bag_item(node['scalr-jenkins']['users']['data_bag'], node['scalr-jenkins']['jenkins']['adminuser'])['password']
@@ -36,18 +35,29 @@ execute 'get-update-json' do
   action :run
 end
 
+# setup the verify file for plugins
+file node['scalr-jenkins']['plugins_file'] do
+  owner 'root'
+  group 'root'
+  mode '0600'
+  action :nothing
+end
+
 # install jenkins plugings
 node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
   jenkins_command "install-plugin #{plugin}" do
     action :execute
+    not_if { File.exist?(node['scalr-jenkins']['plugins_file'])}
+    notifies :create, "file[#{node['scalr-jenkins']['plugins_file']}]"
     notifies :restart, 'service[jenkins]', :delayed
   end
   # needs fixed in the base cookbook
-  # jenkins_plugin plugin do
-  #   action :install
-  #   install_deps true
-  #   notifies :restart, 'service[jenkins]', :delayed
-  # end
+  jenkins_plugin plugin do
+    action :install
+    install_deps true
+    only_if { File.exist?(node['scalr-jenkins']['plugins_file'])}
+    notifies :restart, 'service[jenkins]', :delayed
+  end
 end
 
 # force authentication
