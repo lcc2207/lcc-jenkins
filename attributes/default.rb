@@ -4,6 +4,9 @@ default['scalr-jenkins']['check_file'] = Chef::Config[:file_cache_path] + '/jenk
 # run on time for scalr-ctl
 default['scalr-jenkins']['scalr-ctl_file'] = Chef::Config[:file_cache_path] + '/scarl-ctl'
 
+# verify file for plugins
+default['scalr-jenkins']['plugins_file'] = Chef::Config[:file_cache_path] + '/plugins'
+
 # java version
 default['java']['jdk_version'] = '8'
 default['java']['oracle']['accept_oracle_download_terms'] = true
