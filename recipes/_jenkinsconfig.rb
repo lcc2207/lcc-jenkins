@@ -47,7 +47,7 @@ end
 node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
   jenkins_command "install-plugin #{plugin}" do
     action :execute
-    not_if { File.exist?(node['scalr-jenkins']['plugins_file'])}
+    not_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
     notifies :create, "file[#{node['scalr-jenkins']['plugins_file']}]"
     notifies :restart, 'service[jenkins]', :delayed
   end
@@ -55,7 +55,7 @@ node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
   jenkins_plugin plugin do
     action :install
     install_deps true
-    only_if { File.exist?(node['scalr-jenkins']['plugins_file'])}
+    only_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
     notifies :restart, 'service[jenkins]', :delayed
   end
 end
