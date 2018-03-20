@@ -61,7 +61,8 @@ jobs.each do |job|
       farm_template: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_template'],
       farmid: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farmid'],
       farm_action: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_action'],
-      stage_build: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['stage_build']
+      stage_build: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['stage_build'],
+      farm_temp_url: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_temp_url']
     )
   end
 

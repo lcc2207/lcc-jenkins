@@ -36,6 +36,9 @@
           # Create farm and get ID
           <% if @farm_action == "template" %>
           export farm_template=<%= @farm_template %>
+          <% unless @farm_temp_url.empty? %>
+          curl <%= @farm_temp_url %> | jq '.farm.name=env.FName' > $farm_template
+          <% end %>
           export farmid=`scalr-ctl --config $config farms create-from-template --stdin < $farm_template | jq '.data.id'`
           <% else %>
           export farmid=<%= @farmid %>

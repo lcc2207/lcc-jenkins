@@ -6,7 +6,8 @@
   "envId": "53",
   "key_id": "APIKLMM2GHBHUEFFESFQ",
   "secret_key": "wkffJ8uDx+MgQtPKWd8ZPNeC7r5lo11UuXq9NwzQ",
-  "farm_template": "web-server.json",
+  "farm_template": "apache.json",
+  "farm_temp_url": "https://raw.githubusercontent.com/lcc2207/scalr-demo-farm/master/web-server.json",
   "farm_action": "template",
   "stage_build": "stage-app-1"
 }
