@@ -57,8 +57,12 @@ jobs.each do |job|
     variables(
       job_name: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['id'],
       gitrepo: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['gitrepo'],
+      confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.yml",
+      farm_template: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_template'],
       farmid: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farmid'],
-      confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.yml"
+      farm_action: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_action'],
+      stage_build: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['stage_build'],
+      farm_temp_url: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_temp_url']
     )
   end
 

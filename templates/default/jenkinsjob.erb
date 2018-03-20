@@ -6,6 +6,8 @@
           url: "<%= @gitrepo %>"
           branches:
            - origin/master
+    triggers:
+      - pollscm: "*/5 * * * *"
     defaults: global
     description: ''
     disabled: false
@@ -20,14 +22,28 @@
       numToKeep: 3
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
+    <% unless @stage_build.empty? %>
+    publishers:
+          - trigger:
+              project: <%= @stage_build %>
+              threshold: SUCCESS
+    <% end %>
     builders:
       - shell: |
           export config=<%= @confpath %>
           export FName=$JOB_NAME-$GIT_BRANCH-$GIT_COMMIT
-          export farmid=<%= @farmid %>
 
           # Create farm and get ID
+          <% if @farm_action == "template" %>
+          export farm_template=<%= @farm_template %>
+          <% unless @farm_temp_url.empty? %>
+          curl <%= @farm_temp_url %> | jq '.farm.name=env.FName' > $farm_template
+          <% end %>
+          export farmid=`scalr-ctl --config $config farms create-from-template --stdin < $farm_template | jq '.data.id'`
+          <% else %>
+          export farmid=<%= @farmid %>
           export farmid=`scalr-ctl --config $config farms clone --name $FName --farmId $farmid | jq '.data.id'`
+          <% end %>
           echo $farmid
 
           # launch farm
