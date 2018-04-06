@@ -49,14 +49,16 @@ node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
     action :execute
     not_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
     notifies :create, "file[#{node['scalr-jenkins']['plugins_file']}]"
-    notifies :restart, 'service[jenkins]', :delayed
+    notifies :restart, 'service[jenkins]', :delayed unless node['scalr-jenkins']['docker']['dockerinstance']
+    notifies :restart, "docker_container[#{node['scalr-jenkins']['docker']['containername']}]", :delayed if node['scalr-jenkins']['docker']['dockerinstance']
   end
   # needs fixed in the base cookbook
   jenkins_plugin plugin do
     action :install
     install_deps true
     only_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
-    notifies :restart, 'service[jenkins]', :delayed
+    notifies :restart, 'service[jenkins]', :delayed unless node['scalr-jenkins']['docker']['dockerinstance']
+    notifies :restart, "docker_container[#{node['scalr-jenkins']['docker']['containername']}]", :delayed if node['scalr-jenkins']['docker']['dockerinstance']
   end
 end
 
