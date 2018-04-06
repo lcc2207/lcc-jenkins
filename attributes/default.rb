@@ -1,6 +1,9 @@
 # verify security
 default['scalr-jenkins']['check_file'] = Chef::Config[:file_cache_path] + '/jenkins.sec'
 
+# turn off jenkins setup wizard
+default['jenkins']['master']['jvm_options'] = '-Dhudson.diyChunking=false -Djenkins.install.runSetupWizard=false'
+
 # run on time for scalr-ctl
 default['scalr-jenkins']['scalr-ctl_file'] = Chef::Config[:file_cache_path] + '/scarl-ctl'
 
@@ -29,3 +32,18 @@ default['scalr-jenkins']['jenkins-jobs']['data_bag'] = 'scalr-jenkins-jobs'
 
 # requied packages
 default['scalr-jenkins']['packages'] = ['python-pip', 'jq']
+
+# docker setup
+default['scalr-jenkins']['docker']['logfile'] = '/var/log/dockerservice.log'
+default['scalr-jenkins']['docker']['imgname'] = 'scalr-jenkins'
+default['scalr-jenkins']['docker']['repo'] = 'jenkins'
+default['scalr-jenkins']['docker']['regversion'] = 'latest'
+default['scalr-jenkins']['docker']['portmap'] = ['8080:8080', '50000:50000']
+default['scalr-jenkins']['docker']['containername'] = 'jenkins'
+default['scalr-jenkins']['docker']['dockerinstance'] = false
+default['scalr-jenkins']['docker']['version'] = '18.03.0-ce'
+default['scalr-jenkins']['docker']['binds'] = ['/var/lib/jenkins:/var/jenkins_home']
+
+# docker build setup
+default['scalr-jenkins']['docker']['build_folder'] = '/opt/scalr-jenkins'
+default['scalr-jenkins']['docker']['build_files'] = ['add_admin.groovy']
