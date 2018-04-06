@@ -48,7 +48,7 @@ directory node['scalr-jenkins']['docker']['build_folder'] do
 end
 
 # copy files needed to build image
-node['scalr-jenkins']['docker']['build_files'].each do | file |
+node['scalr-jenkins']['docker']['build_files'].each do |file|
   cookbook_file "#{node['scalr-jenkins']['docker']['build_folder']}/#{file}" do
     source file
   end
