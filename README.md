@@ -1,6 +1,6 @@
 # scalr-jenkins
 
-========================
+------------
 Installs jenkins, the git plugin and sets basic security.  
 - Users will need to sign up on the Jenkins home page to gain access in this cookbook.
 - Uses a data bag named <b>scalr-jenkins</b> to hold the password key for the chef user to make runs with auth enabled.
