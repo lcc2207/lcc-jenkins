@@ -5,8 +5,8 @@
   "scalr_server":"demo.scalr.com",
   "accountId": "11",
   "envId": "53",
-  "key_id": "APIKLMM2GHBHUEFFESFQ",
-  "secret_key": "wkffJ8uDx+MgQtPKWd8ZPNeC7r5lo11UuXq9NwzQ",
+  "key_id": "xxxx",
+  "secret_key": "xxxxx",
   "farm_action": "clone",
   "stage_build": ""
 }
