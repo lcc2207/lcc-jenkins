@@ -68,6 +68,6 @@ jobs.each do |job|
 
   execute 'addjobs' do
     cwd Chef::Config[:file_cache_path]
-    command "/usr/local/bin/jenkins-jobs update #{fulljob}"
+    command "jenkins-jobs update #{fulljob}"
   end
 end
