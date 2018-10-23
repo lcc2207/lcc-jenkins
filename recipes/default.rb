@@ -1,4 +1,5 @@
 include_recipe 'apt::default' if ubuntu?
+include_recipe 'yum-epel::default' if rhel?
 
 # setup prerequisites
 include_recipe 'scalr-jenkins::prereq'

@@ -4,7 +4,7 @@ maintainer_email 'lynn@scalr.com'
 license 'All Rights Reserved'
 description 'Installs/Configures scalr-jenkins'
 long_description 'Installs/Configures scalr-jenkins'
-version '0.1.15'
+version '0.1.16'
 chef_version '>= 12.1' if respond_to?(:chef_version)
 
 issues_url 'https://github.com/lcc2207/scalr-jenkins/issues'
@@ -17,3 +17,4 @@ depends	'jenkins', '~> 6.2.0'
 depends 'ntp', '~> 3.6.0'
 depends 'docker', '~> 4.6.5'
 depends 'selinux', '~> 2.1.1'
+depends 'yum-epel', '~> 3.3.0'
