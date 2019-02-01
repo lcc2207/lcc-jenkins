@@ -1,0 +1,10 @@
+{
+  "id": "scalr-command-webhook",
+  "gitrepo": "https://github.com/scalr-tutorials/scalr-command-webhook.git",
+  "scalr_server": "http://demo.scalr.club",
+  "projectId": "1682b63d-6d28-4b5f-8438-3cf058f89a6c",
+  "envId": "6",
+  "key_id": "xxxx",
+  "secret_key": "xxxx",
+  "type": "webhook"
+}

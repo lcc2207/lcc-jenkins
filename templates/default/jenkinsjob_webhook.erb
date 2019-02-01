@@ -1,0 +1,49 @@
+- job:
+    name: "<%= @job_name %>"
+    project-type: freestyle
+    scm:
+      - git:
+          url: "<%= @gitrepo %>"
+          branches:
+           - origin/master
+    triggers:
+      - pollscm: "*/5 * * * *"
+    defaults: global
+    description: ''
+    disabled: false
+    display-name: "<%= @job_name %>"
+    concurrent: false
+    quiet-period: 5
+    block-downstream: false
+    block-upstream: false
+    retry-count: 3
+    logrotate:
+      daysToKeep: 3
+      numToKeep: 3
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: |
+            #!/bin/bash
+            source <%= @confpath %>
+
+            # lint check python code
+            pylint webhook.py
+
+            # verify the script works
+            kitchen verify -c
+
+            # kitchen cleanup
+            kitchen destroy
+
+            # build docker image
+            docker build ./ -t registry.scalr.com:5000/$JOB_NAME
+
+            # push to registry
+            docker push registry.scalr.com:5000/$JOB_NAME
+
+            # save docker image to local file
+            docker save $JOB_NAME > $JOB_NAME.tar
+
+            # clean up local registry
+            docker rmi registry.scalr.com:5000/$JOB_NAME

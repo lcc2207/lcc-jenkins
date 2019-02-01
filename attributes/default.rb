@@ -31,7 +31,7 @@ default['scalr-jenkins']['jenkins-jobs']['path'] = '/etc/jenkins_jobs'
 default['scalr-jenkins']['jenkins-jobs']['data_bag'] = 'scalr-jenkins-jobs'
 
 # requied packages
-default['scalr-jenkins']['packages'] = ['python-pip', 'jq']
+default['scalr-jenkins']['packages'] = ['python-pip', 'jq', 'git', 'pylint']
 
 # docker setup
 default['scalr-jenkins']['docker']['logfile'] = '/var/log/dockerservice.log'
@@ -41,7 +41,7 @@ default['scalr-jenkins']['docker']['regversion'] = 'latest'
 default['scalr-jenkins']['docker']['portmap'] = ['8080:8080', '50000:50000']
 default['scalr-jenkins']['docker']['containername'] = 'jenkins'
 default['scalr-jenkins']['docker']['dockerinstance'] = false
-default['scalr-jenkins']['docker']['version'] = '18.03.0-ce'
+default['scalr-jenkins']['docker']['version'] = '18.09.1-ce'
 default['scalr-jenkins']['docker']['binds'] = ['/var/lib/jenkins:/var/jenkins_home']
 
 # docker build setup

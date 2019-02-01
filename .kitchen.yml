@@ -1,41 +1,43 @@
 ---
 driver:
-  name: ec2
-  require_chef_omnibus: 13.4.19
-  aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_ID'] %>
-  security_group_ids: <%= ENV['AWS_SECURITY_GROUPS'] %>
-  region: <%= ENV['AWS_REGION'] || 'us-east-1' %>
-  availability_zone: <%= ENV['AWS_AVAILABILITY_ZONE'] || 'us-east-1a' %>
-  subnet_id: <%= ENV['AWS_SUBNET'] %>
-  instance_type: 't2.medium'
-  tags:
-    Name: scarl-jenkins
-    Owner: '<%= ENV['AWS_OWNER_TAG'] %>'
-
-transport:
-  ssh_key: '<%= ENV['AWS_SSH_KEY_PATH'] %>'
-  connection_timeout: 5
-  connection_retries: 20
+  name: scalr
+  scalr_api_key_id: '<%= ENV['API_KEY'] %>'
+  scalr_api_key_secret: '<%= ENV['SECRET_KEY'] %>'
+  scalr_api_url: '<%= ENV['SCALR_URL'] %>'
+  scalr_env_id: '<%= ENV['SCALR_ENV'] %>'
+  scalr_project_id: '<%= ENV['SCALR_PROJECT'] %>'
+  scalr_server_instanceType: 't2.medium'
+  scalr_platform: 'ec2'
+  scalr_location: 'us-east-1'
+  scalr_base_farm_role:
+    security:
+      securityGroups:
+        - id: 'sg-03049e48'
+    networking:
+      networks:
+        - id: 'vpc-5818a621'
+      subnets:
+        - id: 'subnet-6b709a55'
 
 provisioner:
+  product_name: chefdk
+  product_version: latest
   name: chef_zero
-  # You may wish to disable always updating cookbooks in CI or other testing environments.
-  # For example:
-  #   always_update_cookbooks: <%= !ENV['CI'] %>
   always_update_cookbooks: true
 
 verifier:
   name: inspec
 
 platforms:
-  - name: ubuntu-16.04
-    driver_config:
-      image_id: <%= ENV['AWS_UBUNTU16_AMI'] %>
-    transport:
-      username: ubuntu
+- name: ubuntu-16.04
+  driver:
+    scalr_use_role: 1
+- name: centos7
+  driver:
+      scalr_use_role: 96624
 
 suites:
-  - name: default
+  - name: default-jenkins
     data_bags_path: "test/integration/data_bags"
     run_list:
       - recipe[scalr-jenkins::default]
@@ -43,7 +45,7 @@ suites:
       inspec_tests:
         - test/smoke/default
     attributes:
-  - name: docker
+  - name: docker-jenkins
     data_bags_path: "test/integration/data_bags"
     run_list:
       - recipe[scalr-jenkins::docker]

@@ -47,23 +47,53 @@ jobs.each do |job|
       key_id: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['key_id'],
       secret_key_id: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['secret_key']
     )
-  end
+  end if data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['type'] == 'farm'.downcase
 
-  fulljob = "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}"
-  template fulljob do
-    source 'jenkinsjob.erb'
+  # create the kitchen Config
+  template "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.sh" do
+    source 'kitchen.erb'
     owner 'jenkins'
     group 'jenkins'
     variables(
-      job_name: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['id'],
-      gitrepo: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['gitrepo'],
-      confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.yml",
-      farm_template: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_template'],
-      farmid: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farmid'],
-      farm_action: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_action'],
-      stage_build: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['stage_build'],
-      farm_temp_url: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_temp_url']
+      scarlserver: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['scalr_server'],
+      projectId: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['projectId'],
+      envId: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['envId'],
+      key_id: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['key_id'],
+      secret_key_id: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['secret_key']
     )
+  end unless data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['type'] == 'farm'.downcase
+
+  fulljob = "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}"
+  template fulljob do
+    owner 'jenkins'
+    group 'jenkins'
+    if data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['type'] == 'webhook'.downcase
+      source 'jenkinsjob_webhook.erb'
+      variables(
+        job_name: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['id'],
+        gitrepo: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['gitrepo'],
+        confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.sh",
+      )
+    elsif data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['type'] == 'cookbook'.downcase
+      source 'jenkinsjob_cookbook.erb'
+      variables(
+        job_name: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['id'],
+        gitrepo: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['gitrepo'],
+        confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.sh",
+      )
+    else
+      source 'jenkinsjob.erb'
+      variables(
+        job_name: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['id'],
+        gitrepo: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['gitrepo'],
+        confpath: "#{node['scalr-jenkins']['jenkins-jobs']['path']}/#{job}.yml",
+        farm_template: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_template'],
+        farmid: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farmid'],
+        farm_action: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_action'],
+        stage_build: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['stage_build'],
+        farm_temp_url: data_bag_item(node['scalr-jenkins']['jenkins-jobs']['data_bag'], job)['farm_temp_url']
+      )
+    end
   end
 
   execute 'addjobs' do

@@ -7,7 +7,7 @@ end
 # pull users databag
 users = data_bag(node['scalr-jenkins']['users']['data_bag'])
 
-# # create the base users
+# create the base users
 users.each do |user|
   dbuser = data_bag_item(node['scalr-jenkins']['users']['data_bag'], user)
   jenkins_user dbuser['id'] do
