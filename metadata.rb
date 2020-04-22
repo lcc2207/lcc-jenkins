@@ -1,14 +1,14 @@
-name 'scalr-jenkins'
-maintainer 'lynn@scalr.com'
-maintainer_email 'lynn@scalr.com'
+name 'lcc-jenkins'
+maintainer 'lynn@fidmail.com'
+maintainer_email 'lynn@fidmail.com'
 license 'All Rights Reserved'
-description 'Installs/Configures scalr-jenkins'
-long_description 'Installs/Configures scalr-jenkins'
+description 'Installs/Configures lcc-jenkins'
+long_description 'Installs/Configures lcc-jenkins'
 version '0.1.16'
 chef_version '>= 12.1' if respond_to?(:chef_version)
 
-issues_url 'https://github.com/lcc2207/scalr-jenkins/issues'
-source_url 'https://github.com/lcc2207/scalr-jenkins'
+issues_url 'https://github.com/lcc2207/lcc-jenkins/issues'
+source_url 'https://github.com/lcc2207/lcc-jenkins'
 
 depends 'apt', '~> 7.1.0'
 depends 'chef-sugar'

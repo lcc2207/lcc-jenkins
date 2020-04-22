@@ -38,7 +38,7 @@ suites:
   - name: default
     data_bags_path: "test/integration/data_bags"
     run_list:
-      - recipe[scalr-jenkins::default]
+      - recipe[lcc-jenkins::default]
     verifier:
       inspec_tests:
         - test/smoke/default
@@ -46,7 +46,7 @@ suites:
   - name: docker
     data_bags_path: "test/integration/data_bags"
     run_list:
-      - recipe[scalr-jenkins::docker]
+      - recipe[lcc-jenkins::docker]
     verifier:
       inspec_tests:
         - test/smoke/default

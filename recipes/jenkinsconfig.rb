@@ -1,15 +1,15 @@
-if File.exist?(node['scalr-jenkins']['check_file'])
-  # node.run_state[:jenkins_username] = node['scalr-jenkins']['jenkins']['adminuser']
-  # node.run_state[:jenkins_password] = data_bag_item(node['scalr-jenkins']['users']['data_bag'], node['scalr-jenkins']['jenkins']['adminuser'])['password']
-  node.run_state[:jenkins_private_key] = data_bag_item(node['scalr-jenkins']['users']['data_bag'], node['scalr-jenkins']['jenkins']['adminuser'])['private_key']
+if File.exist?(node['lcc-jenkins']['check_file'])
+  # node.run_state[:jenkins_username] = node['lcc-jenkins']['jenkins']['adminuser']
+  # node.run_state[:jenkins_password] = data_bag_item(node['lcc-jenkins']['users']['data_bag'], node['lcc-jenkins']['jenkins']['adminuser'])['password']
+  node.run_state[:jenkins_private_key] = data_bag_item(node['lcc-jenkins']['users']['data_bag'], node['lcc-jenkins']['jenkins']['adminuser'])['private_key']
 end
 
 # pull users databag
-users = data_bag(node['scalr-jenkins']['users']['data_bag'])
+users = data_bag(node['lcc-jenkins']['users']['data_bag'])
 
 # # create the base users
 users.each do |user|
-  dbuser = data_bag_item(node['scalr-jenkins']['users']['data_bag'], user)
+  dbuser = data_bag_item(node['lcc-jenkins']['users']['data_bag'], user)
   jenkins_user dbuser['id'] do
     retries 2
     retry_delay 60
@@ -37,7 +37,7 @@ execute 'get-update-json' do
 end
 
 # setup the verify file for plugins
-file node['scalr-jenkins']['plugins_file'] do
+file node['lcc-jenkins']['plugins_file'] do
   owner 'root'
   group 'root'
   mode '0600'
@@ -45,23 +45,23 @@ file node['scalr-jenkins']['plugins_file'] do
 end
 
 # install jenkins plugings
-node['scalr-jenkins']['jenkins']['plugins'].each do |plugin|
+node['lcc-jenkins']['jenkins']['plugins'].each do |plugin|
   jenkins_command "install-plugin #{plugin}" do
     action :execute
     retries 3
     retry_delay 10
-    not_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
-    notifies :create, "file[#{node['scalr-jenkins']['plugins_file']}]"
-    notifies :restart, 'service[jenkins]', :delayed unless node['scalr-jenkins']['docker']['dockerinstance']
-    notifies :restart, "docker_container[#{node['scalr-jenkins']['docker']['containername']}]", :delayed if node['scalr-jenkins']['docker']['dockerinstance']
+    not_if { File.exist?(node['lcc-jenkins']['plugins_file']) }
+    notifies :create, "file[#{node['lcc-jenkins']['plugins_file']}]"
+    notifies :restart, 'service[jenkins]', :delayed unless node['lcc-jenkins']['docker']['dockerinstance']
+    notifies :restart, "docker_container[#{node['lcc-jenkins']['docker']['containername']}]", :delayed if node['lcc-jenkins']['docker']['dockerinstance']
   end
   # needs fixed in the base cookbook
   jenkins_plugin plugin do
     action :install
     install_deps true
-    only_if { File.exist?(node['scalr-jenkins']['plugins_file']) }
-    notifies :restart, 'service[jenkins]', :immediately #:delayed unless node['scalr-jenkins']['docker']['dockerinstance']
-    notifies :restart, "docker_container[#{node['scalr-jenkins']['docker']['containername']}]", :delayed if node['scalr-jenkins']['docker']['dockerinstance']
+    only_if { File.exist?(node['lcc-jenkins']['plugins_file']) }
+    notifies :restart, 'service[jenkins]', :immediately #:delayed unless node['lcc-jenkins']['docker']['dockerinstance']
+    notifies :restart, "docker_container[#{node['lcc-jenkins']['docker']['containername']}]", :delayed if node['lcc-jenkins']['docker']['dockerinstance']
   end
 end
 
@@ -78,6 +78,6 @@ jenkins_script 'add_authentication' do
     instance.setAuthorizationStrategy(strategy)
     instance.save()
   EOH
-  not_if { File.exist?(node['scalr-jenkins']['check_file']) }
-  notifies :create, "file[#{node['scalr-jenkins']['check_file']}]"
+  not_if { File.exist?(node['lcc-jenkins']['check_file']) }
+  notifies :create, "file[#{node['lcc-jenkins']['check_file']}]"
 end

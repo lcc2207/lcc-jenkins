@@ -1,7 +1,7 @@
 # setup prerequisites
-include_recipe 'scalr-jenkins::prereq'
+include_recipe 'lcc-jenkins::prereq'
 
-node.default['scalr-jenkins']['docker']['dockerinstance'] = true
+node.default['lcc-jenkins']['docker']['dockerinstance'] = true
 
 selinux_state 'disabled' do
   action :disabled
@@ -10,7 +10,7 @@ end
 
 # install docker
 docker_installation 'default' do
-  version node['scalr-jenkins']['docker']['version']
+  version node['lcc-jenkins']['docker']['version']
   action :create
 end
 
@@ -34,12 +34,12 @@ end
 
 docker_service_manager 'default' do
   host ["tcp://#{node['ipaddress']}:2375", 'unix:///var/run/docker.sock']
-  logfile node['scalr-jenkins']['docker']['logfile']
+  logfile node['lcc-jenkins']['docker']['logfile']
   action :start
 end
 
 # create folder to hold the docker build information
-directory node['scalr-jenkins']['docker']['build_folder'] do
+directory node['lcc-jenkins']['docker']['build_folder'] do
   owner 'ubuntu'
   group 'ubuntu'
   mode '0755'
@@ -48,34 +48,34 @@ directory node['scalr-jenkins']['docker']['build_folder'] do
 end
 
 # copy files needed to build image
-node['scalr-jenkins']['docker']['build_files'].each do |file|
-  cookbook_file "#{node['scalr-jenkins']['docker']['build_folder']}/#{file}" do
+node['lcc-jenkins']['docker']['build_files'].each do |file|
+  cookbook_file "#{node['lcc-jenkins']['docker']['build_folder']}/#{file}" do
     source file
   end
 end
 
 # create docker file to add in scalr tools
-template "#{node['scalr-jenkins']['docker']['build_folder']}/Dockerfile" do
+template "#{node['lcc-jenkins']['docker']['build_folder']}/Dockerfile" do
   source 'Dockerfile.erb'
 end
 
-docker_image node['scalr-jenkins']['docker']['imgname'] do
-  source node['scalr-jenkins']['docker']['build_folder']
-  # tag node['scalr-jenkins']['docker']['regversion']
+docker_image node['lcc-jenkins']['docker']['imgname'] do
+  source node['lcc-jenkins']['docker']['build_folder']
+  # tag node['lcc-jenkins']['docker']['regversion']
   action :build_if_missing
 end
 
-docker_container node['scalr-jenkins']['docker']['containername'] do
-  container_name node['scalr-jenkins']['docker']['containername']
-  image node['scalr-jenkins']['docker']['imgname']
-  port node['scalr-jenkins']['docker']['portmap']
-  tag node['scalr-jenkins']['docker']['regversion']
+docker_container node['lcc-jenkins']['docker']['containername'] do
+  container_name node['lcc-jenkins']['docker']['containername']
+  image node['lcc-jenkins']['docker']['imgname']
+  port node['lcc-jenkins']['docker']['portmap']
+  tag node['lcc-jenkins']['docker']['regversion']
   binds ['/var/lib/jenkins:/var/jenkins_home']
   restart_policy 'always'
   env ['JAVA_OPTS=-Dhudson.Main.development=true -Djenkins.install.runSetupWizard=false']
   action :run_if_missing
-  notifies :delete, "file[#{node['scalr-jenkins']['check_file']}]", :immediately
+  notifies :delete, "file[#{node['lcc-jenkins']['check_file']}]", :immediately
 end
 
-include_recipe 'scalr-jenkins::_jenkinsconfig'
-include_recipe 'scalr-jenkins::_jenkins_jobs'
+include_recipe 'lcc-jenkins::_jenkinsconfig'
+include_recipe 'lcc-jenkins::_jenkins_jobs'
